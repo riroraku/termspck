@@ -48,7 +48,7 @@ If no `curl` installed please install it.
 `termspck.sh` have (2) scripts, (1) is for file fetcher 
 and the other (2) is for `php` server setup and watcher.
 > NOTE: THESE (2) SCRIPTS SHOULD BE ON THE SAME DIRECTORY!
-> UNLESS YOU WHAT YOURE DOING!!!
+> UNLESS YOU KNOW WHAT YOURE DOING!!!
 * `termspck.sh`
 * `termspck-fetcher.sh`
 
@@ -179,7 +179,7 @@ php logs using this command:
 Using `watch -n 1 'cat php-dev-test/.php.log'` will help you view log updates
 every 1 second, use it on another tty window.
 
-Checking [http://localhost/9999](http://localhost/9999) on browser if working:
+Checking [http://localhost:9999](http://localhost:9999) on browser if working:
 ![chrome screenshot working pho server](/.image/chrome-localhost-9999.jpg)
 
 # Gotchas
