@@ -189,7 +189,7 @@ Using `watch -n 1 'cat php-dev-test/.php.log'` will help you view log updates
 every 1 second, use it on another tty window.
 
 Checking [http://localhost:9999](http://localhost:9999) on browser if working:
-![chrome screenshot working pho server](/.image/chrome-localhost-9999.jpg)
+![chrome screenshot working pho server](/.images/chrome-localhost-9999.jpg)
 
 # Gotchas
 The script fetches all files including sub-directories,
