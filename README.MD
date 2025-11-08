@@ -13,6 +13,15 @@ This script targets devs that prefers CLI-based and/or people
 prefers minimum effort and/or people wanted to setup their own
 IDE and/or people that has termux installed on their devices!
 
+## Early Gotcha
+The script doesnt work as intended if theres an `index` files (`index.php`, `index.html`, `index.html`) at
+root directory in Spck Editor file tree! Its advisable to make a directory then add those
+`index` files.
+
+![no index files here image](/.images/spck-editor-no-index-at-root.jpg)
+
+More gotchas below, dont skip `README.MD`!
+
 ## Dependency
 * Termux [(F-Droid)](https://f-droid.org/en/packages/com.termux/) [(Google Play)](https://play.google.com/store/apps/details?id=com.termux) (or similar)
 * Bash (should be!)
@@ -192,6 +201,8 @@ building up storage.
 This script depends on Spck Editor's port 7700 if the devs of Spck Editor
 Decided to change it you can modify these scripts if ever the devs change
 its port.
+
+Shouldnt work if theres an `index` files at root directory of Spck Editor
 
 Might not maintain this since its modifiable by most folks.
 
