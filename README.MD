@@ -14,9 +14,11 @@ prefers minimum effort and/or people wanted to setup their own
 IDE and/or people that has termux installed on their devices!
 
 ## Early Gotcha
-The script doesnt work as intended if theres an `index` files (`index.php`, `index.html`, `index.html`) at
-root directory in Spck Editor file tree! Its advisable to make a directory then add those
-`index` files.
+The script doesnt work as intended if theres an `index` files (`index.php`, `index.html`, `index.html`) in
+all directory and subdirectory in Spck Editor file tree!
+
+If you have `index` files its advisable to rename it and avoid using `index` name when using
+the script! Refer #1
 
 ![no index files here image](/.images/spck-editor-no-index-at-root.jpg)
 
@@ -202,7 +204,7 @@ This script depends on Spck Editor's port 7700 if the devs of Spck Editor
 Decided to change it you can modify these scripts if ever the devs change
 its port.
 
-Shouldnt work if theres an `index` files at root directory of Spck Editor
+Shouldnt work if theres an `index` files in all directory and subdirectory of Spck Editor
 
 Might not maintain this since its modifiable by most folks.
 
