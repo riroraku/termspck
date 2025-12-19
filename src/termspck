@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+termspck_b() {
+	curl -s "$1" | grep -o '<span class="[dirfle]*name">[a-zA-Z0-9._%$/-]*</span>' | grep -o '>[a-zA-Z0-9._%$/-]*<' | grep -o '[a-zA-Z0-9._%$/-]*'
+}
+
+termspck_a() {
+	local current_curled_url="localhost:7700/$1"
+	local sub_file_tree=$(termspck_b "$current_curled_url")
+	
+	[ -d "target_dir/$1" ] || mkdir "$target_dir/$1"
+	
+	while read -r g; do
+		if [[ "$g" =~ ^[a-zA-Z0-9._%$-]*/$ ]]; then
+			termspck_a "$1$g"
+		else
+			curl -s "$current_curled_url$g" -o "$target_dir/$1$g"
+		fi
+	done <<< "$sub_file_tree"
+}
+
+target_dir="$1"
+curled_file_tree=$(termspck_b "localhost:7700/")
+
+termspck_c() {
+  while read -r f; do 
+  	if [[ "$f" =~ ^[a-zA-Z0-9._%$-]*/$ ]]; then
+  		termspck_a "$f"
+  	else
+  		curl -s "localhost:7700/$f" -o "$1/$f"
+  	fi
+  done <<< "$curled_file_tree"
+}
+
+
+# check options
+if [ "$1" == "" ] || [ "$2" == "" ]; then
+	echo -e "No arguments supplied!"
+	echo -e "Usage: $0 [docroot] [port]"
+	echo -e "\t[docroot]         PHP server docroot, also"
+	echo -e "\t                  the dir to store fetched files."
+	echo -e "\t                  NOTE: Dont add additional '/'"
+	echo -e "\t                    [X] /sdcard/riro/"
+	echo -e "\t                    [/] /sdcard/riro"
+	echo -e "\t                  See PHP documentation."
+	echo -e "\t[port]            PHP server port. Use port"
+	echo -e "\t                  between 1024-49151."
+	echo -e "\t                  See PHP documentation."
+	exit 1
+fi
+
+if ! nc -z "localhost" "$2" ; then
+	# checks if path exist
+	[ ! -d "$1" ] && echo "$1 is not a working directory! Exit." && exit 67
+	
+	#chmod 700 "$(pwd)/termspck-fetcher"
+	# setup php server
+	php -S "localhost:$2" -t "$1" &> "$1/.php.log" &
+	phpPID="$!"
+	# fetch source file from spck's port every 0.5s
+	#bash -c "while true; do . $(pwd)/termspck-fetcher $1 > /dev/null 2>&1; sleep 0.5; done" &
+	termspck_c "$target_dir" &
+	#watcherPID="$!"
+	
+	echo "CMD php -S ...  , PID: $phpPID"
+	#echo "CMD bash -c ... , PID: $watcherPID"
+	echo -e "To kill php, \`kill -9 <PID>\`"
+	#echo -e "To check those processes, \`kill -0 <PID>\`"
+	exit 0
+else
+	echo -e "\e[1;35m//>/v/<//\e[0m"
+	echo "Port [$2] is in use!"
+	exit 69
+fi
