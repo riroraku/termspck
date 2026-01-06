@@ -55,39 +55,51 @@ curl --version
 ```
 If no `curl` installed please install it.
 
-## Installation via `git clone`
+## termspck.sh - Setup
+`termspck.sh` have (2) scripts, (1) is for file fetcher 
+and the other (2) is for `php` server setup and watcher.
+> NOTE: THESE (2) SCRIPTS SHOULD BE ON THE SAME DIRECTORY!
+> UNLESS YOU KNOW WHAT YOURE DOING!!!
+* `termspck.sh`
+* `termspck-fetcher.sh`
+
+### Installation via `git clone`
 Clone this repo: 
 ```bash
 git clone https://github.com/riroraku/termspck.git
 ```
 Goto after cloning directory:
 ```bash
-cd termspck/src
+cd termspck
 ```
 Add executable permission to scripts:
 ```bash
-chmod 700 termspck
+chmod 700 termspck.sh termspck-fetcher.sh
 ```
 
-## Installation via `curl`
+### Installation via `curl`
 Make directory first and goto:
 ```bash
 mkdir termspck && cd termspck
 ```
-Fetch `termspck` using this command:
+Fetch `termspck.sh` using this command:
 ```bash
-curl 'https://raw.githubusercontent.com/riroraku/termspck/refs/heads/main/src/termspck' -o termspck.sh
+curl 'https://raw.githubusercontent.com/riroraku/termspck/refs/heads/main/termspck.sh' -o termspck.sh
 ```
+Fetch `termspck-fetcher.sh` using this command:
+```bash
+curl 'https://raw.githubusercontent.com/riroraku/termspck/refs/heads/main/termspck-fetcher.sh' -o termspck-fetcher.sh
+``` 
 Optional. Fetch license copy (XD)
 ```bash
 curl 'https://raw.githubusercontent.com/riroraku/termspck/refs/heads/main/LICENSE' -o LICENSE
 ```
 Add executable permission to scripts:
 ```bash
-chmod 700 termspck
+chmod 700 termspck.sh termspck-fetcher.sh
 ```
 
-## Installation via Copy/Paste
+### Installation via Copy/Paste
 Go to my repo `https://github.com/riroraku/termspck`:
 
 Go on termux, make directory and goto:
@@ -96,16 +108,34 @@ mkdir termspck && cd termspck
 ```
 Copy the file named `termspck.sh` then paste it using `cat`: 
 ```bash
-cat > termspck
+cat > termspck.sh
+```
+Paste contents after the `cat`.
+
+Do the same thing to other script `termspck-fetcher.sh`:
+```bash
+cat > termspck-fetcher.sh
 ```
 Paste contents after the `cat`.
 
 Add executable permission to scripts:
 ```bash
-chmod 700 termspck
+chmod 700 termspck.sh termspck-fetcher.sh
 ```
 
-## Usage `termspck`
+## termspck.sh - Running the script
+The repo has (2) script but only one should be used. Although
+the other script `termspck-fetcher.sh` is actually independent 
+its a standalone script where the `termspck.sh` depends on.
+
+But to effectively used it as intended, the `termspck.sh` should be
+used instead of `termspck-fetcher.sh` - it fetches every 0.5s using
+the `bash -c` with `sleep` and `curl` embedded on the script.
+
+You can use `termspck-fetcher.sh` but only one-time unlike the 
+`termspck.sh` which fetches files every 0.5s *you can actually modified its interval*
+
+### Usage `termspck`
 Displays help.
 ```bash
 ./termspck
