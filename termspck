@@ -1,0 +1,94 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+root_dir="$1"
+
+# `$1` A URL to fetch
+termspck_a() {
+	curl -s "$1" | grep -o '<span class="[dirfle]*name">[a-zA-Z0-9._%$/-]*</span>' | grep -o '>[a-zA-Z0-9._%$/-]*<' | grep -o '[a-zA-Z0-9._%$/-]*'
+}
+# $1 -> a directory to crawl if its a directory not a file
+# $2 -> a URL to be crawled and if its a files it will download instead of crawled
+# $3 -> a file to be stored in
+# $4 -> an array of file structure entity
+termspck_z() {
+	while read -r g; do
+		if [[ "$g" =~ ^[a-zA-Z0-9._%$-]*/$ ]]; then
+			termspck_b "$1$g"
+		else 
+			curl -s "$2$g" -o "$3$g"
+		fi
+	done <<< "$4"
+}
+
+# `$1`  A path to check.
+termspck_b() {
+	local current_curled_url="localhost:7700/$1"
+	local sub_file_tree=$(termspck_a "$current_curled_url")
+	
+	[ -d "$root_dir/$1" ] || mkdir "$root_dir/$1"
+	
+	#while read -r g; do
+		#if [[ "$g" =~ ^[a-zA-Z0-9._%$-]*/$ ]]; then
+			#termspck_b "$1$g"
+		#else
+			#curl -s "$current_curled_url$g" -o "$root_dir/$1$g"
+		#fi
+	#done <<< "$sub_file_tree"
+	termspck_z "$1" "$current_curled_url" "$root_dir/$1" "$sub_file_tree"
+}
+
+termspck_c() {
+  local curled_file_tree=$(termspck_a "localhost:7700/")
+  #while read -r f; do 
+  	# create dir and named after it and then fetch its contents to store
+  	#if [[ "$f" =~ ^[a-zA-Z0-9._%$-]*/$ ]]; then
+  		#termspck_b "$f"
+  	#else
+  		#curl -s "localhost:7700/$f" -o "$root_dir/$f"
+  	#fi
+  #done <<< "$curled_file_tree"
+  while true; do
+  	termspck_z "" "localhost:7700/" "$root_dir/" "$curled_file_tree"
+  done
+}
+
+
+# check options
+if [ "$1" == "" ] || [ "$2" == "" ]; then
+	echo -e "No arguments supplied!"
+	echo -e "Usage: $0 [docroot] [port]"
+	echo -e "\t[docroot]         PHP server docroot, also"
+	echo -e "\t                  the dir to store fetched files."
+	echo -e "\t                  NOTE: Dont add additional '/'"
+	echo -e "\t                    [X] /sdcard/riro/"
+	echo -e "\t                    [/] /sdcard/riro"
+	echo -e "\t                  See PHP documentation."
+	echo -e "\t[port]            PHP server port. Use port"
+	echo -e "\t                  between 1024-49151."
+	echo -e "\t                  See PHP documentation."
+	exit 1
+fi
+
+if ! nc -z "localhost" "$2" ; then
+	# checks if path exist
+	[ ! -d "$1" ] && echo "$1 is not a working directory! Exit." && exit 67
+	
+	#chmod 700 "$(pwd)/termspck-fetcher"
+	# setup php server
+	php -S "localhost:$2" -t "$1" &> "$1/.php.log" &
+	phpPID="$!"
+	# fetch source file from spck's port every 0.5s
+	#bash -c "while true; do . $(pwd)/termspck-fetcher $1 > /dev/null 2>&1; sleep 0.5; done" &
+	termspck_c &
+	watcherPID="$!"
+	
+	echo "CMD php -S ...  , PID: $phpPID"
+	echo "CMD <subshell>  , PID: $watcherPID"
+	echo -e "To kill php, \`kill -9 <PID>\`"
+	#echo -e "To check those processes, \`kill -0 <PID>\`"
+	exit 0
+else
+	echo -e "\e[1;35m//>/v/<//\e[0m"
+	echo "Port [$2] is in use!"
+	exit 69
+fi
