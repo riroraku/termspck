@@ -38,7 +38,7 @@ termspck_b() {
 }
 
 termspck_c() {
-  local curled_file_tree=$(termspck_a "localhost:7700/")
+  local curled_file_tree
   #while read -r f; do 
   	# create dir and named after it and then fetch its contents to store
   	#if [[ "$f" =~ ^[a-zA-Z0-9._%$-]*/$ ]]; then
@@ -48,6 +48,7 @@ termspck_c() {
   	#fi
   #done <<< "$curled_file_tree"
   while true; do
+    curled_file_tree=$(termspck_a "localhost:7700/")
   	termspck_z "" "localhost:7700/" "$root_dir/" "$curled_file_tree"
   done
 }
